@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Peace Committee Scheduler</title>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="scheduler.css">
+</head>
+<body>
+
+  <h2>Peace Committee Scheduler</h2>
+
+  <!-- Calendar Display -->
+  <div id="calendar"></div>
+
+  <!-- Booking Form -->
+  <form id="bookingForm">
+    <h3>Schedule an Appointment</h3>
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input 
+    type="tel" 
+    id="contact" 
+    placeholder="09XXXXXXXXX" 
+    required 
+    pattern="^09\d{9}$" 
+    title="Enter a valid Philippine mobile number (e.g., 09171234567)" 
+    maxlength="11" 
+    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+    <input type="date" id="date" required>
+    <button type="submit">Book Slot</button>
+    <button type="button" id="cancelBtn">Cancel</button>
+  </form>
+
+  <!-- Modal for Cancel Confirmation -->
+  <div id="cancelModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-btn" id="cancelClose">&times;</span>
+      <h3>Are you sure you want to cancel the booking?</h3>
+      <button id="confirmCancelBtn">Yes</button>
+      <button id="cancelCancelBtn">No</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+  <script>
+    const maxSlotsPerDay = 3;
+    let calendar;
+    const cancelModal = document.getElementById('cancelModal');
+    const cancelClose = document.getElementById('cancelClose');
+    const confirmCancelBtn = document.getElementById('confirmCancelBtn');
+    const cancelCancelBtn = document.getElementById('cancelCancelBtn');
+    
+    document.addEventListener('DOMContentLoaded', function () {
+      const calendarEl = document.getElementById('calendar');
+      calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: fetchBookings
+      });
+      calendar.render();
+
+      document.getElementById('bookingForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const contact = document.getElementById('contact').value;
+        const date = document.getElementById('date').value;
+
+        fetch('scheduler.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ name, contact, date })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'full') {
+            alert('Sorry, all slots are full for this date.');
+          } else {
+            alert('Booking successful!');
+            calendar.refetchEvents();
+            document.getElementById('bookingForm').reset();
+          }
+        });
+      });
+
+      // Show the Cancel Modal when "Cancel" button is clicked
+      document.getElementById('cancelBtn').addEventListener('click', function () {
+        cancelModal.style.display = 'block';
+      });
+
+      // Close the modal when clicking the "No" button
+      cancelCancelBtn.addEventListener('click', function () {
+        cancelModal.style.display = 'none';
+      });
+
+      // Close the modal when clicking the "X" button
+      cancelClose.addEventListener('click', function () {
+        cancelModal.style.display = 'none';
+      });
+
+      // Confirm cancellation and redirect
+      confirmCancelBtn.addEventListener('click', function () {
+        window.location.href = 'home.php'; // Redirect to home.php
+      });
+    });
+
+    function fetchBookings(fetchInfo, successCallback, failureCallback) {
+      fetch('scheduler.php')
+        .then(res => res.json())
+        .then(data => successCallback(data))
+        .catch(err => failureCallback(err));
+    }
+  </script>
+
+</body>
+</html>
+

@@ -1,0 +1,82 @@
+/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #0219e7; /* Blue body background */
+    margin: 0;
+    padding: 0;
+    color: #fff; /* White text color for better visibility */
+}
+
+/* Container for the instruction card */
+.instruction-container {
+    width: 80%;
+    margin: 20px auto;
+    background-color: #fff; /* White card background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    color: #333; /* Dark text inside the card for readability */
+}
+
+/* Title styling inside the card */
+.instruction-container .title {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+/* Instruction text */
+.instruction-container p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-align: center; /* Centered text for better readability */
+}
+
+/* Burn image styling */
+.burn-image {
+    width: 600px; /* Sets a fixed width for the image */
+    display: block;
+    margin: 10px auto; /* Centers the image */
+}
+
+
+/* Burn Type Section */
+.burn-type {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Button to go back to the previous page */
+.instruction-container .back-btn {
+    background-color: #0129e7; /* Blue button */
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.instruction-container .back-btn:hover {
+    background-color: #45a049; /* Green on hover */
+    color: #f1f1f1; /* Lighter text color on hover */
+    
+}
+
+/* Media Query for Small Screens */
+@media (max-width: 768px) {
+    .instruction-container {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .instruction-container .title {
+        font-size: 1.5em;
+    }
+
+    .instruction-container p {
+        font-size: 1em;
+    }
+}
